@@ -19,9 +19,11 @@ from .sql_functions import transaction
 from .table_creator import join_tables
 from .table_creator import substitute_tables
 
+#Analysis functions
+from .analysis import cfs
+
 #Utilities
 from .utilities import initialize_data
-from .utilities import analize_tables
 from .utilities import substitute_word
 from .utilities import clean_inconsistencies
 from .utilities import generate_moda_PV
@@ -29,6 +31,6 @@ from .utilities import generate_random_PV
 from .utilities import take_mode
 
 __all__ = ["CONFIG_ROUTE", "QUERY_ROUTE", "DATA_ROUTE", "SCHEMA", "DATABASE", "RELATIONS", "N_TABLES", "LABELS", \
-           "N_AREAS", "N_PV", "analize_tables", \
+           "N_AREAS", "N_PV", "cfs", \
            "TABLES", "DatabaseCursor", "transaction", "join_tables", "substitute_tables", "initialize_data", \
            "substitute_word", "take_mode", "clean_inconsistencies", "generate_random_PV", "generate_moda_PV"]

@@ -217,7 +217,3 @@ def initialize_data(schema, data_directory, tables, relations, n_pv, n_areas):
     #join_tables(tables, relations, os.getcwd() + data_directory)
     obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
     #obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
-
-
-def analize_tables():
-    a = 0
