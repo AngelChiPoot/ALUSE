@@ -1,0 +1,8 @@
+{
+  "host": "127.0.0.1",
+  "user": "planea_super",
+  "password": "pl4n34Adm1n",
+  "dbname": "planea",
+  "port": "5432",
+  "schema": "planea_2015"
+}

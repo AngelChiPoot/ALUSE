@@ -1,0 +1,19 @@
+{
+  "schema": "planea_2015",
+  "tables": {
+    "0": "alumnos",
+  	"1": "directores",
+  	"2": "grupos",
+  	"3": "escuelas"
+  },
+  "relations": {
+    "0": "",
+  	"1": "ESCUELA1",
+  	"2": "GRUPO",
+  	"3": "ESCUELA2"
+  },
+  "labels": 1,
+  "n_PV": 5,
+  "n_tables": 4,
+  "n_areas": 2
+}
