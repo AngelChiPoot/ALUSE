@@ -14,6 +14,41 @@ def substitute_tables(schema, directory, catalogo):
     df_data = pd.read_csv(directory + 'mergedTables.csv', encoding='latin1', usecols=fields)
     print("Merging data meanings...")
     row = 0
+    for field in fields:
+        # This IF attempts to skip those variables that already are substituted
+        if df_cat.iloc[row]["VAL"] == "ALL":
+            fields_changed.append(field)
+            row = row + 1
+        else:
+            fields_changed.append(field + "_")
+            df_aux = pd.DataFrame(columns=[field, fields_changed[-1]])
+            while df_cat.iloc[row]["CAMPO"] == field:
+                df_aux.loc[row] = [df_cat.iloc[row]["VAL"], df_cat.iloc[row]["CONTENIDO"]]
+                row = row + 1
+                if row == df_cat.shape[0]:
+                    break
+            df_aux[field] = df_aux[field].astype(numpy.int64)
+            #Hasta aqui ya tenemos la mini tabla en aux_df
+            df_data = pd.merge(df_data, df_aux, on=field, how='inner')
+        
+    df_data = df_data.loc[:, fields_changed]
+
+    #df_data.to_csv(directory + schema + "_final_all.csv", index=False, columns=fields_changed, encoding='latin1')
+    return df_data
+
+
+def substitute_tables2(schema, directory, catalogo):
+    fields = []
+    fields_changed = []
+    print("Reading joined tables... ")
+    df_cat = pd.read_csv(directory + catalogo + '.csv', encoding='latin1')
+    for i in range(len(df_cat.index)):
+        if df_cat.iloc[i][0] not in fields:
+            fields.append(df_cat.iloc[i][0])
+
+    df_data = pd.read_csv(directory + 'mergedTables.csv', encoding='latin1', usecols=fields)
+    print("Merging data meanings...")
+    row = 0
     for field in fields:  # Here the variable i is the actual field
         fields_changed.append(field + "_")
         df_aux = pd.DataFrame(columns=[field, fields_changed[-1]])
@@ -35,7 +70,7 @@ def substitute_tables(schema, directory, catalogo):
 
 def join_tables(tables, relations, directory):
     repited_columns = []
-    print("Reading original tables.. ")
+    print("Reading original tables... ")
     df1 = pd.read_csv(directory + tables[0] + '.csv', encoding='latin1')
     del tables[0]
     headers_df1 = df1.columns.values.tolist()

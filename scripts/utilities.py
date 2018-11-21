@@ -142,9 +142,12 @@ def generate_random_PV(bigFile, area, nPV, directory, schema):
         del fields[len(fields)-5:]
         fields.append("randomPV")
 
+    to_file = directory + schema + "_" + area + "_randomPV.csv"
     with open(directory + schema + "_" + area + "_randomPV.csv", 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(data)
+
+    return to_file
 
 
 def generate_moda_PV(bigFile, area, nPV, directory, schema):
@@ -176,44 +179,53 @@ def generate_moda_PV(bigFile, area, nPV, directory, schema):
         del fields[len(fields)-5:]
         fields.append("mode")
 
-    with open(directory + schema + "_" + area + "_mode.csv", 'w', encoding='latin1') as csvfile:
+    to_file = directory + schema + "_" + area + "_mode.csv"
+    with open(to_file, 'w', encoding='latin1') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(data)
+
+    return to_file
 
 
 def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
     files_routes = []
+    all_files = []
     t1 = substitute_tables(schema, directory, catalogo)
     headers = t1.columns.values.tolist()
     print("Creating tables for each Area using the Mode and the others approaches")
     rIndex = 0
     for i in range(n_areas, 0, -1):
         columns_to_use = headers[ : len(headers)-(n_areas*n_pv)]
+        print("Total number of variables: ", len(columns_to_use))
         index = n_pv*i
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
-        files_routes.append(directory + schema + "_")
+        files_routes.append(directory + schema + "_all.csv")
         print("Saving table with all PVs in the area of ", columns_to_use[-1][0:-2])
-        t1.to_csv(files_routes[rIndex] + "_all.csv", index=False, columns=columns_to_use, encoding='latin1')
+        t1.to_csv(files_routes[rIndex], index=False, columns=columns_to_use, encoding='latin1')
 
         columns_to_use = columns_to_use[ : len(columns_to_use) - n_pv]
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
             print("Generating RandomColumnPV Table for: ", columns_to_use[-1][0:-1])
-            t1.to_csv(files_routes[rIndex] + "_" + columns_to_use[-1][0:-1] + ".csv", index=False, columns=columns_to_use, encoding='latin1')
+            all_files.append(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv")
+            t1.to_csv(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv", index=False, columns=columns_to_use, encoding='latin1')
             if j != 1:
                 del columns_to_use[-1]
 
         print("Generating Mode Table for: ", columns_to_use[-1][0:-2])
-        generate_moda_PV(files_routes[rIndex] + "_all.csv", columns_to_use[-1][0:-2], n_pv, directory, schema)
-
+        m = generate_moda_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
+        all_files.append(m)
         print("Generating RandomPV  Table for: ", columns_to_use[-1][0:-2])
-        generate_random_PV(files_routes[rIndex] + "_all.csv", columns_to_use[-1][0:-2], n_pv, directory, schema)
-
+        r = generate_random_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
+        all_files.append(r)
         rIndex = rIndex + 1
+
+    return all_files
 
 
 def initialize_data(schema, data_directory, tables, relations, n_pv, n_areas):
     #join_tables(tables, relations, os.getcwd() + data_directory)
-    obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
+    files = obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
     #obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
+    return files
