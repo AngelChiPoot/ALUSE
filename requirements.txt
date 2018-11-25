@@ -1,3 +1,5 @@
 python-weka-wrapper3
 numpy>=1.15.4
 pandas>=0.23.4
+Flask>=0.12
+flask-restful>=0.3.5

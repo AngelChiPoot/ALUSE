@@ -2,8 +2,17 @@ import csv
 import random
 import re
 import os
+import psutil
 from scripts.table_creator import substitute_tables
 from scripts.table_creator import join_tables
+
+
+def computer_specs():
+    cores = psutil.cpu_count()
+    ram   = int((psutil.virtual_memory().available - 500000000) / 1000000000)
+
+    return str(cores), str(ram)
+
 
 def clean_inconsistencies(bigFile):
     lista = []
