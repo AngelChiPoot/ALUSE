@@ -1,4 +1,5 @@
 import numpy
+import json
 import pandas as pd
 
 
@@ -88,3 +89,48 @@ def create_reduced_tables(tables, selected_attributes):
         columns_to_use = []
     #TO-DO: GUardar en un CSV todos los nombres de los campos que resultaron de la reduccion
     return reduced_files, att_names
+
+
+def create_results_page(schema):
+    new_page_name = "./results/" + schema + ".html"
+    row = 0
+    with open("./results/base.html", "r") as base_page:
+        with open(new_page_name, "w") as new_page:
+            with open("./results/results.json") as result_file:
+                data = json.load(result_file)
+                print(data)
+                for line in base_page.readlines():
+                    if line != "<!--FLAG-->\n":
+                        new_page.write(line)
+                    else:
+                        for i in range(len(data["tables"])):
+                            new_page.write('\t\t\t\t\t\t<div class="row">\n')
+
+                            new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Tabla">\n')
+                            new_page.write('\t\t\t\t\t\t\t\t' + data["fulltables"][i][0:-4] + '\n')
+                            new_page.write('\t\t\t\t\t\t\t</div>\n')
+
+                            new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="N">\n')
+                            new_page.write('\t\t\t\t\t\t\t\t' + str(data["Cardinality"][i]) + '\n')
+                            new_page.write('\t\t\t\t\t\t\t</div>\n')
+
+                            new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Attributos Seleccionados">\n')
+                            new_page.write('\t\t\t\t\t\t\t\t<ul>\n')
+                            for att in data["SelectedAttributes"][i]:
+                                new_page.write('\t\t\t\t\t\t\t\t\t<li>' + att + "</li>\n")
+                            new_page.write('\t\t\t\t\t\t\t\t</ul>\n')
+                            new_page.write('\t\t\t\t\t\t\t</div>\n')
+
+                            new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Descargar">\n')
+                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://localhost/aluse/analize/files/data/' + data["tables"][i] + '" download>\n')
+                            new_page.write('\t\t\t\t\t\t\t\t\tDescargar\n')
+                            new_page.write('\t\t\t\t\t\t\t\t</a>\n')
+                            new_page.write('\t\t\t\t\t\t\t</div>\n')
+
+                            new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Descargar">\n')
+                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://localhost/aluse/analize/files/data/' + data["fulltables"][i] + '" download>\n')
+                            new_page.write('\t\t\t\t\t\t\t\t\tDescargar\n')
+                            new_page.write('\t\t\t\t\t\t\t\t</a>\n')
+                            new_page.write('\t\t\t\t\t\t\t</div>\n')
+
+                            new_page.write('\t\t\t\t\t\t</div>\n\n')

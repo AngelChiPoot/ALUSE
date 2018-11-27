@@ -46,4 +46,4 @@ def select_att(files, cores, ram):
         return -1
     finally:
         jvm.stop()
-        return selected_attributes, reduced_files, att_names
+        return reduced_files, att_names

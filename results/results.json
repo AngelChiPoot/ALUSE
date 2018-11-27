@@ -3,11 +3,11 @@
         "planea_2015_LYCNVL5_reduced.csv",
         "planea_2015_LYCNVL4_reduced.csv"
     ],
-    "files": [
-        "/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5_reduced.csv",
-        "/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4_reduced.csv"
+    "fulltables": [
+        "planea_2015_LYCNVL5.csv",
+        "planea_2015_LYCNVL4.csv"
     ],
-    "Selected Attibutes": [
+    "SelectedAttributes": [
         [
             "ID_LYC_INSTR",
             "ID_SERV_",

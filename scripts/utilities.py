@@ -234,27 +234,38 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
     return all_files
 
 
-def create_result_files(att_names, reduced_files):
+def delete_originals(tables, data_route):
+    tables.append("catalogo")
+    for table in tables:
+        file  = "." + data_route + table + ".csv"
+        if os.path.exists(file):
+            os.remove(file)
+        else:
+            print("The file does not exist")
+
+
+def create_result_files(att_names, reduced_files, full_files):
     data = {}
     data["tables"] = []
-    data["files"] = []
-    data["Selected Attibutes"] = []
+    data["fulltables"] = []
+    data["SelectedAttributes"] = []
     data["Cardinality"] = []
     row = 0
     for att in att_names:
         file = reduced_files[row].split("/")
         data["tables"].append(file[-1])
-        data["files"].append(reduced_files[row])
-        data["Selected Attibutes"].append(att[0:-1])
+        file = full_files[row].split("/")
+        data["fulltables"].append(file[-1])
+        data["SelectedAttributes"].append(att[0:-1])
         data["Cardinality"].append(len(att)-1)
         row = row + 1
 
-    with open('results.json', 'w') as outfile:
+    with open('./results/results.json', 'w') as outfile:
         json.dump(data, outfile, indent=4)
 
 
 def initialize_data(schema, data_directory, tables, relations, n_pv, n_areas):
-    #join_tables(tables, relations, os.getcwd() + data_directory)
-    files = obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
-    #obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
+    join_tables(tables, relations, os.getcwd() + data_directory)
+    files = obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo", n_pv, n_areas)
+    obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
     return files
