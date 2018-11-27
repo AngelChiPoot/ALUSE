@@ -71,7 +71,7 @@ def create_reduced_tables(tables, selected_attributes):
     columns_to_use = []
     reduced_files = []
     for table in tables:
-        logger.info("Saving reduced table of: ", table[-15:-4])
+        logger.info("Saving reduced table of: " + str(table[-15:-4]))
         df = pd.read_csv(table, encoding='latin1')
         row_headers = 0
         row_att = 0

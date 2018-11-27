@@ -29,7 +29,7 @@ def clean_inconsistencies(bigFile):
         indexes = list(range(1, len(lista)))
         count = 0
         initialSize = len(lista) - 1
-        logger.info("Dataset initial Size: ", initialSize, "\nStarting Analysis")
+        logger.info("Dataset initial Size: " + str(initialSize) + "\nStarting Analysis")
         inc = {}
         toDelete = []
         for i in indexes:
@@ -63,7 +63,7 @@ def clean_inconsistencies(bigFile):
             deleted.append(i)
             offset += 1
         finalSize = len(lista) - 1
-        logger.info("Final size of Dataset: ", finalSize)
+        logger.info("Final size of Dataset: " + str(finalSize))
 
     with open("new"+bigFile, 'w') as csvfile:
         writer = csv.writer(csvfile)
@@ -201,27 +201,27 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
     rIndex = 0
     for i in range(n_areas, 0, -1):
         columns_to_use = headers[ : len(headers)-(n_areas*n_pv)]
-        logger.info("Total number of variables: ", len(columns_to_use))
+        logger.info("Total number of variables: " + str(len(columns_to_use)))
         index = n_pv*i
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
         files_routes.append(directory + schema + "_all.csv")
-        logger.info("Saving table with all PVs in the area of ", columns_to_use[-1][0:-2])
+        logger.info("Saving table with all PVs in the area of " + str(columns_to_use[-1][0:-2]))
         t1.to_csv(files_routes[rIndex], index=False, columns=columns_to_use, encoding='latin1')
 
         columns_to_use = columns_to_use[ : len(columns_to_use) - n_pv]
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
-            logger.info("Generating RandomColumnPV Table for: ", columns_to_use[-1][0:-1])
+            logger.info("Generating RandomColumnPV Table for: " + str(columns_to_use[-1][0:-1]))
             all_files.append(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv")
             t1.to_csv(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv", index=False, columns=columns_to_use, encoding='latin1')
             if j != 1:
                 del columns_to_use[-1]
 
-        logger.info("Generating Mode Table for: ", columns_to_use[-1][0:-2])
+        logger.info("Generating Mode Table for: " + str(columns_to_use[-1][0:-2]))
         m = generate_moda_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
         all_files.append(m)
-        logger.info("Generating RandomPV  Table for: ", columns_to_use[-1][0:-2])
+        logger.info("Generating RandomPV  Table for: " + str(columns_to_use[-1][0:-2]))
         r = generate_random_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
         all_files.append(r)
         rIndex = rIndex + 1
@@ -237,7 +237,7 @@ def delete_originals(tables, data_route):
         if os.path.exists(file):
             os.remove(file)
         else:
-            logger.error( "The original files do not exist.")
+            logger.error("The original files do not exist.")
 
 
 def create_result_files(att_names, reduced_files, full_files):
