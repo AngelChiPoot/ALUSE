@@ -1,19 +1,20 @@
 import numpy
 import json
 import pandas as pd
+from scripts.const import logger
 
 
 def substitute_tables(schema, directory, catalogo):
     fields = []
     fields_changed = []
-    print("Reading joined tables... ")
+    logger.info("Reading joined tables... ")
     df_cat = pd.read_csv(directory + catalogo + '.csv', encoding='latin1')
     for i in range(len(df_cat.index)):
         if df_cat.iloc[i][0] not in fields:
             fields.append(df_cat.iloc[i][0])
 
     df_data = pd.read_csv(directory + 'mergedTables.csv', encoding='latin1', usecols=fields)
-    print("Merging data meanings...")
+    logger.info("Merging data meanings...")
     row = 0
     for field in fields:
         # This IF attempts to skip those variables that already are substituted
@@ -34,18 +35,17 @@ def substitute_tables(schema, directory, catalogo):
         
     df_data = df_data.loc[:, fields_changed]
 
-    #df_data.to_csv(directory + schema + "_final_all.csv", index=False, columns=fields_changed, encoding='latin1')
     return df_data
 
 
 def join_tables(tables, relations, directory):
     repited_columns = []
-    print("Reading original tables... ")
+    logger.info("Reading original tables... ")
     df1 = pd.read_csv(directory + tables[0] + '.csv', encoding='latin1')
     del tables[0]
     headers_df1 = df1.columns.values.tolist()
 
-    print("Joining original tables... ")
+    logger.info("Joining original tables... ")
     for key_table, value_table in tables.items():
         df2 = pd.read_csv(directory + value_table + '.csv', encoding='latin1')
         headers_df2 = df2.columns.values.tolist()
@@ -71,7 +71,7 @@ def create_reduced_tables(tables, selected_attributes):
     columns_to_use = []
     reduced_files = []
     for table in tables:
-        print("Saving reduced table of: ", table[-15:-4])
+        logger.info("Saving reduced table of: ", table[-15:-4])
         df = pd.read_csv(table, encoding='latin1')
         row_headers = 0
         row_att = 0
@@ -87,18 +87,18 @@ def create_reduced_tables(tables, selected_attributes):
         row_att_list = row_att_list + 1
         att_names.append(columns_to_use)
         columns_to_use = []
-    #TO-DO: GUardar en un CSV todos los nombres de los campos que resultaron de la reduccion
+
     return reduced_files, att_names
 
 
 def create_results_page(schema):
+    logger.info("Creating Webpage with the general results.")
     new_page_name = "./results/" + schema + ".html"
     row = 0
     with open("./results/base.html", "r") as base_page:
         with open(new_page_name, "w") as new_page:
             with open("./results/results.json") as result_file:
                 data = json.load(result_file)
-                print(data)
                 for line in base_page.readlines():
                     if line != "<!--FLAG-->\n":
                         new_page.write(line)

@@ -6,6 +6,7 @@ import os
 import psutil
 from scripts.table_creator import substitute_tables
 from scripts.table_creator import join_tables
+from scripts.const import logger
 
 
 def computer_specs():
@@ -21,18 +22,17 @@ def clean_inconsistencies(bigFile):
 
     flag = False
     with open(bigFile) as csvfile:
-        print("Reading ALUSE file")
+        logger.info("Reading ALUSE file")
         reader = csv.reader(csvfile)
         for row in reader:
             lista.append(row)
         indexes = list(range(1, len(lista)))
         count = 0
         initialSize = len(lista) - 1
-        print("Dataset initial Size: ", initialSize, "\nStarting Analysis")
+        logger.info("Dataset initial Size: ", initialSize, "\nStarting Analysis")
         inc = {}
         toDelete = []
         for i in indexes:
-            print("Analyzing row: ", i, ". Found Inconsistences: ", count)
             for j in indexes[i:]:
                 if i != j:
                     if lista[i][:-1] == lista[j][:-1] and lista[i][-1] != lista[j][-1]:
@@ -58,15 +58,12 @@ def clean_inconsistencies(bigFile):
         deleted = []
         offset = 0
         for i in toDelete:
-            """print(i, deleted)
-            for j in range(len(lista)):
-                print(lista[j])"""
             if i not in deleted:
                 del lista[i-offset]
             deleted.append(i)
             offset += 1
         finalSize = len(lista) - 1
-        print("Final size of Dataset: ", finalSize)
+        logger.info("Final size of Dataset: ", finalSize)
 
     with open("new"+bigFile, 'w') as csvfile:
         writer = csv.writer(csvfile)
@@ -135,8 +132,6 @@ def generate_random_PV(bigFile, area, nPV, directory, schema):
         reader = csv.DictReader(csvfile)
         fields = reader.fieldnames
         data.append(fields)
-        #print(PVnames)
-        #print(fields)
         for row in reader:
             pv = area + str(random.choice(x)) + "_"
             aux = []
@@ -202,31 +197,31 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
     all_files = []
     t1 = substitute_tables(schema, directory, catalogo)
     headers = t1.columns.values.tolist()
-    print("Creating tables for each Area using the Mode and the others approaches")
+    logger.info("Creating tables for each Area using the Mode and the others approaches")
     rIndex = 0
     for i in range(n_areas, 0, -1):
         columns_to_use = headers[ : len(headers)-(n_areas*n_pv)]
-        print("Total number of variables: ", len(columns_to_use))
+        logger.info("Total number of variables: ", len(columns_to_use))
         index = n_pv*i
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
         files_routes.append(directory + schema + "_all.csv")
-        print("Saving table with all PVs in the area of ", columns_to_use[-1][0:-2])
+        logger.info("Saving table with all PVs in the area of ", columns_to_use[-1][0:-2])
         t1.to_csv(files_routes[rIndex], index=False, columns=columns_to_use, encoding='latin1')
 
         columns_to_use = columns_to_use[ : len(columns_to_use) - n_pv]
         for j in range(n_pv, 0, -1):
             columns_to_use.append(headers[-index + j - 1])
-            print("Generating RandomColumnPV Table for: ", columns_to_use[-1][0:-1])
+            logger.info("Generating RandomColumnPV Table for: ", columns_to_use[-1][0:-1])
             all_files.append(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv")
             t1.to_csv(files_routes[rIndex][0:-8] + "_" + columns_to_use[-1][0:-1] + ".csv", index=False, columns=columns_to_use, encoding='latin1')
             if j != 1:
                 del columns_to_use[-1]
 
-        print("Generating Mode Table for: ", columns_to_use[-1][0:-2])
+        logger.info("Generating Mode Table for: ", columns_to_use[-1][0:-2])
         m = generate_moda_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
         all_files.append(m)
-        print("Generating RandomPV  Table for: ", columns_to_use[-1][0:-2])
+        logger.info("Generating RandomPV  Table for: ", columns_to_use[-1][0:-2])
         r = generate_random_PV(files_routes[rIndex], columns_to_use[-1][0:-2], n_pv, directory, schema)
         all_files.append(r)
         rIndex = rIndex + 1
@@ -235,16 +230,18 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
 
 
 def delete_originals(tables, data_route):
+    logger.info("Deleting original Files.")
     tables.append("catalogo")
     for table in tables:
         file  = "." + data_route + table + ".csv"
         if os.path.exists(file):
             os.remove(file)
         else:
-            print("The file does not exist")
+            logger.error( "The original files do not exist.")
 
 
 def create_result_files(att_names, reduced_files, full_files):
+    logger.info("Creating the file which includes all results from the precesses.")
     data = {}
     data["tables"] = []
     data["fulltables"] = []
@@ -265,7 +262,8 @@ def create_result_files(att_names, reduced_files, full_files):
 
 
 def initialize_data(schema, data_directory, tables, relations, n_pv, n_areas):
+    logger.info("Initializing all tables.")
     join_tables(tables, relations, os.getcwd() + data_directory)
     files = obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo", n_pv, n_areas)
-    obtain_all_tables(schema, os.getcwd() + data_directory, "catalogo_min", n_pv, n_areas)
+
     return files

@@ -10,6 +10,7 @@ from .const import N_TABLES
 from .const import N_PV
 from .const import N_AREAS
 from .const import LABELS
+from .const import logger
 
 #Table Creator
 from .table_creator import join_tables
@@ -31,7 +32,7 @@ from .utilities import computer_specs
 from .utilities import create_result_files
 from .utilities import delete_originals
 
-__all__ = ["CONFIG_ROUTE", "QUERY_ROUTE", "DATA_ROUTE", "SCHEMA", "DATABASE", "RELATIONS", "N_TABLES", "LABELS", \
-           "N_AREAS", "N_PV", "select_att", "TABLES", "join_tables", "substitute_tables", "initialize_data", \
-           "computer_specs", "create_reduced_tables", "create_result_files", "create_results_page", "delete_originals", \
+__all__ = ["CONFIG_ROUTE", "QUERY_ROUTE", "DATA_ROUTE", "SCHEMA", "DATABASE", "RELATIONS", "N_TABLES", "LABELS",\
+           "N_AREAS", "N_PV", "select_att", "TABLES", "join_tables", "substitute_tables", "initialize_data", "logger",\
+           "computer_specs", "create_reduced_tables", "create_result_files", "create_results_page", "delete_originals",\
            "substitute_word", "take_mode", "clean_inconsistencies", "generate_random_PV", "generate_moda_PV"]

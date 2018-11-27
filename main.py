@@ -2,7 +2,6 @@ from scripts import *
 import time
 import json
 
-#TO-DO: Crear un archivo de log para ver lo que pasa en este modulo cuando se ejecuta en background
 
 #f = ['/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5.csv', '/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4.csv']
 #rf = ['/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5_reduced.csv', '/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4_reduced.csv']
@@ -30,13 +29,13 @@ def analize():
     start = time.time()
     files = initialize_data(SCHEMA, DATA_ROUTE, TABLES, RELATIONS, N_PV, N_AREAS)
     cores, ram = computer_specs()
-    reduced_files, att_names = select_att(f, cores, ram)
+    reduced_files, att_names = select_att(files, cores, ram)
     create_result_files(att_names, reduced_files, files)
     #create_result_files(an, rf, f)
     create_results_page(SCHEMA)
     delete_originals(TABLES.values(), DATA_ROUTE)
     end = time.time()
-    print("Time taken to run all the processes: ", (end - start)/60, " minutes.")
+    logger.info("Time taken to run all the processes: ", (end - start)/60, " minutes.")
 
     return
 
@@ -49,6 +48,7 @@ app=Flask(__name__)
 
 @app.route("/runProcess/", methods=['POST'])
 def run_process():
+    logging.debug("Llegó una petición al API Rest de Python: ", request)
     if request.method == 'POST':
         result = request.form
         data = {}
@@ -96,4 +96,5 @@ def getDataIsocrona():
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5000, debug=True, use_reloader=False)
+
 """
