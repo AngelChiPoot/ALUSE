@@ -27,8 +27,9 @@ from .utilities import generate_moda_PV
 from .utilities import generate_random_PV
 from .utilities import take_mode
 from .utilities import computer_specs
+from .utilities import create_result_files
 
 __all__ = ["CONFIG_ROUTE", "QUERY_ROUTE", "DATA_ROUTE", "SCHEMA", "DATABASE", "RELATIONS", "N_TABLES", "LABELS", \
            "N_AREAS", "N_PV", "select_att", "TABLES", "join_tables", "substitute_tables", "initialize_data", \
-           "computer_specs", "create_reduced_tables", \
+           "computer_specs", "create_reduced_tables", "create_result_files", \
            "substitute_word", "take_mode", "clean_inconsistencies", "generate_random_PV", "generate_moda_PV"]

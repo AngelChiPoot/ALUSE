@@ -14,7 +14,7 @@ def cfs(table, cores):
     anneal_data.class_is_last()
 
     # perform attribute selection
-    print("Running attribute selection for: ", table[-15:-4], ". Please, wait a moment.")
+    print("Running attribute selection for: ", table.split("/")[-1], ". Please, wait a moment.")
     # TO-DO: Improve the cfs parameters
     search = ASSearch(classname="weka.attributeSelection.BestFirst", options=["-D", "0", "-N", "5"])
     evaluation = ASEvaluation(classname="weka.attributeSelection.CfsSubsetEval", options=["-Z", "-P", cores, "-E", cores])
@@ -38,7 +38,9 @@ def select_att(files, cores, ram):
         for table in files:
             selected_attributes.append(cfs(table, cores))
         reduced_files, att_names = create_reduced_tables(files, selected_attributes)
-        reduced_files = 0
+        #reduced_files = 0
+        print(reduced_files)
+        print(att_names)
     except Exception as e:
         print(traceback.format_exc())
         return -1

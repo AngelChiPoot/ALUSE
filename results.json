@@ -1,0 +1,58 @@
+{
+    "tables": [
+        "planea_2015_LYCNVL5_reduced.csv",
+        "planea_2015_LYCNVL4_reduced.csv"
+    ],
+    "files": [
+        "/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5_reduced.csv",
+        "/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4_reduced.csv"
+    ],
+    "Selected Attibutes": [
+        [
+            "ID_LYC_INSTR",
+            "ID_SERV_",
+            "MARGINC_",
+            "TAM_LOC_SEC_",
+            "SEXO_",
+            "EDAD_AC_",
+            "AB002_",
+            "AB013_",
+            "AB049_",
+            "AB057_",
+            "AB058_",
+            "AB059_",
+            "AB079_",
+            "RFABNVL_",
+            "D033_",
+            "D059_",
+            "D078_",
+            "D080_",
+            "G003_"
+        ],
+        [
+            "ID_LYC_INSTR",
+            "ID_SERV_",
+            "MARGINC_",
+            "TAM_LOC_SEC_",
+            "SEXO_",
+            "EDAD_AC_",
+            "AB002_",
+            "AB013_",
+            "AB049_",
+            "AB057_",
+            "AB058_",
+            "AB059_",
+            "AB079_",
+            "RFABNVL_",
+            "D033_",
+            "D059_",
+            "D078_",
+            "D080_",
+            "G003_"
+        ]
+    ],
+    "Cardinality": [
+        19,
+        19
+    ]
+}

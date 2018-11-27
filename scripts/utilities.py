@@ -1,4 +1,5 @@
 import csv
+import json
 import random
 import re
 import os
@@ -231,6 +232,25 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
         rIndex = rIndex + 1
 
     return all_files
+
+
+def create_result_files(att_names, reduced_files):
+    data = {}
+    data["tables"] = []
+    data["files"] = []
+    data["Selected Attibutes"] = []
+    data["Cardinality"] = []
+    row = 0
+    for att in att_names:
+        file = reduced_files[row].split("/")
+        data["tables"].append(file[-1])
+        data["files"].append(reduced_files[row])
+        data["Selected Attibutes"].append(att[0:-1])
+        data["Cardinality"].append(len(att)-1)
+        row = row + 1
+
+    with open('results.json', 'w') as outfile:
+        json.dump(data, outfile, indent=4)
 
 
 def initialize_data(schema, data_directory, tables, relations, n_pv, n_areas):
