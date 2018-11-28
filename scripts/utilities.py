@@ -231,6 +231,7 @@ def obtain_all_tables(schema, directory, catalogo, n_pv, n_areas):
 
 def delete_originals(tables, data_route):
     logger.info("Deleting original Files.")
+    tables = tables.values()
     tables.append("catalogo")
     for table in tables:
         file  = "." + data_route + table + ".csv"

@@ -1,6 +1,7 @@
 from scripts import *
 import time
 import json
+import traceback
 
 
 #f = ['/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5.csv', '/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4.csv']
@@ -49,49 +50,61 @@ app=Flask(__name__)
 @app.route("/runProcess/", methods=['POST'])
 def run_process():
     logging.debug("Llegó una petición al API Rest de Python: ", request)
-    if request.method == 'POST':
-        result = request.form
-        data = {}
-        aux  = {}
-        row = 0
-        for key, value in result.items():
-            if key == "tables":
-                values = value.split(",")
-                for j in values:
-                    aux[str(row)] = j
-                    row = row + 1
-                data[key] = aux
-                data["ntables"] = len(values)
-                aux = {}
-                row = 0
-            else:
-                if key == "relations":
+    try:
+        if request.method == 'POST':
+            result = request.form
+            data = {}
+            aux  = {}
+            row = 0
+            for key, value in result.items():
+                if key == "tables":
                     values = value.split(",")
                     for j in values:
-                        if j == "ALL":
-                            aux["0"] = ""
-                        else:
-                            aux[str(row)] = j
+                        aux[str(row)] = j
                         row = row + 1
                     data[key] = aux
+                    data["ntables"] = len(values)
                     aux = {}
                     row = 0
                 else:
-                    data[key] = value
-        with open(CONFIG_ROUTE + 'init.json', 'w') as outfile:
-            json.dump(data, outfile, indent=4)
-        print(data)
-        #analize()
-    #TO-DO: Hacer un TRY/CATCH, y si falla redireccionar a una pagina de "Lo siento en Joomla"
-    return redirect("http://localhost/aluse")
-    #jsonify({"response": "Se eliminaron las lineas de: hOLA"})
+                    if key == "relations":
+                        values = value.split(",")
+                        for j in values:
+                            if j == "ALL":
+                                aux["0"] = ""
+                            else:
+                                aux[str(row)] = j
+                            row = row + 1
+                        data[key] = aux
+                        aux = {}
+                        row = 0
+                    else:
+                        data[key] = value
+            with open(CONFIG_ROUTE + 'init.json', 'w') as outfile:
+                json.dump(data, outfile, indent=4)
+            
+            analize()
+    
+        return redirect("http://localhost:8080/aluse/index.php/proceso-completo") 
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        return redirect("http://localhost:8080/aluse/index.php/proceso-incompleto")
+    finally:
+        logger.info("Petición de ANALIZAR hacia la API Rest servida.")
 
 
-@app.route('/data/iso', methods=['GET', 'POST'])
-def getDataIsocrona():
-    a = request.get_json()
-
-    return jsonify({"response": "Se eliminaron las lineas de:" + a})
+@app.route('/consultResults', methods=['GET', 'POST'])
+def consult_results():    
+    logging.debug("Llegó una petición al API Rest de Python: ", request)
+    try:
+        if request.method == 'POST':
+            result = request.form
+            return redirect("http://localhost:8080/aluse/analize/results/" + result["name"] + ".html") 
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        return redirect("http://localhost:8080/aluse/index.php/no-resultados")
+    finally:
+        logger.info("Petición CONSULTAR hacia la API Rest servida.")
 
 
 if __name__ == "__main__":
