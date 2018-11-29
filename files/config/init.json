@@ -10,8 +10,8 @@
     "relations": {
         "0": "",
         "1": "ESCUELA1",
-        "2": "ESCUELA2",
-        "3": "GRUPO"
+        "2": "GRUPO",
+        "3": "ESCUELA2"
     },
     "nPV": "5",
     "nareas": "2"

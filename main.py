@@ -1,12 +1,12 @@
 from scripts import *
+from flask import Flask, request, jsonify, redirect
 import time
 import json
 import traceback
+import os.path
 
 
-#f = ['/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5.csv', '/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4.csv']
-#rf = ['/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL5_reduced.csv', '/home/angel/PycharmProjects/ALUSE/files/data/planea_2015_LYCNVL4_reduced.csv']
-#an = [['ID_LYC_INSTR', 'ID_SERV_', 'MARGINC_', 'TAM_LOC_SEC_', 'SEXO_', 'EDAD_AC_', 'AB002_', 'AB013_', 'AB049_', 'AB057_', 'AB058_', 'AB059_', 'AB079_', 'RFABNVL_', 'D033_', 'D059_', 'D078_', 'D080_', 'G003_', 'LYCNVL5_'], ['ID_LYC_INSTR', 'ID_SERV_', 'MARGINC_', 'TAM_LOC_SEC_', 'SEXO_', 'EDAD_AC_', 'AB002_', 'AB013_', 'AB049_', 'AB057_', 'AB058_', 'AB059_', 'AB079_', 'RFABNVL_', 'D033_', 'D059_', 'D078_', 'D080_', 'G003_', 'LYCNVL4_']]
+app = Flask(__name__)
 
 
 def analize():
@@ -40,18 +40,13 @@ def analize():
 
     return
 
-analize()
-
-"""
-from flask import Flask, request, jsonify, redirect
-
-app=Flask(__name__)
 
 @app.route("/runProcess/", methods=['POST'])
 def run_process():
-    logging.debug("Llegó una petición al API Rest de Python: ", request)
+    logger.info("Llegó una petición del tipo RUN_PROCESS a Python: ")
     try:
         if request.method == 'POST':
+            logger.info("Iniciando parsing de los datos de entrada.")
             result = request.form
             data = {}
             aux  = {}
@@ -82,32 +77,34 @@ def run_process():
                         data[key] = value
             with open(CONFIG_ROUTE + 'init.json', 'w') as outfile:
                 json.dump(data, outfile, indent=4)
-            
+
+            logger.info("Iniciando analis de ALUSE.")
             analize()
-    
-        return redirect("http://localhost:8080/aluse/index.php/proceso-completo") 
+
+        logger.info("Petición de ANALIZAR hacia la API Rest servida.")
+        return redirect("http://localhost:8080/aluse/index.php/proceso-completo")
     except Exception as e:
         logger.error(traceback.format_exc())
         return redirect("http://localhost:8080/aluse/index.php/proceso-incompleto")
-    finally:
-        logger.info("Petición de ANALIZAR hacia la API Rest servida.")
 
 
-@app.route('/consultResults', methods=['GET', 'POST'])
+@app.route('/consultResults/', methods=['POST'])
 def consult_results():    
-    logging.debug("Llegó una petición al API Rest de Python: ", request)
+    logger.info("Llegó una petición del tipo CONSULTAR a Python: ")
     try:
         if request.method == 'POST':
             result = request.form
-            return redirect("http://localhost:8080/aluse/analize/results/" + result["name"] + ".html") 
+            file = result["name"] + ".html"
+            if os.path.exists('./results/' + file):
+                logger.info("Se regreso el archivo " + file)
+                return redirect("http://localhost:8080/aluse/analize/results/" + file)
+            else:
+                return redirect("http://localhost:8080/aluse/index.php/no-resultados")
+
     except Exception as e:
         logger.error(traceback.format_exc())
         return redirect("http://localhost:8080/aluse/index.php/no-resultados")
-    finally:
-        logger.info("Petición CONSULTAR hacia la API Rest servida.")
 
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5000, debug=True, use_reloader=False)
-
-"""
