@@ -41,7 +41,7 @@ def analize():
     return
 
 
-@app.route("/runProcess/", methods=['POST'])
+@app.route("/runProcess/", methods=["GET", "POST"])
 def run_process():
     logger.info("Llegó una petición del tipo RUN_PROCESS a Python: ")
     try:
@@ -82,29 +82,29 @@ def run_process():
             analize()
 
         logger.info("Petición de ANALIZAR hacia la API Rest servida.")
-        return redirect("http://localhost:8080/aluse/index.php/proceso-completo")
+        return redirect("http://148.204.66.69/aluse/index.php/proceso-completo")
     except Exception as e:
         logger.error(traceback.format_exc())
-        return redirect("http://localhost:8080/aluse/index.php/proceso-incompleto")
+        return redirect("http://148.204.66.69/aluse/index.php/proceso-incompleto")
 
 
-@app.route('/consultResults/', methods=['POST'])
-def consult_results():    
-    logger.info("Llegó una petición del tipo CONSULTAR a Python: ")
+@app.route('/consultResults/', methods=["GET", "POST"])
+def consult_results():
+    logger.info("Llegó una petición del tipo CONSULTAR a Python")
     try:
         if request.method == 'POST':
             result = request.form
             file = result["name"] + ".html"
+            logger.info("Archivo: " + file)
             if os.path.exists('./results/' + file):
-                logger.info("Se regreso el archivo " + file)
-                return redirect("http://localhost:8080/aluse/analize/results/" + file)
+                return redirect("http://148.204.66.69/aluse/analize/results/" + file)
             else:
-                return redirect("http://localhost:8080/aluse/index.php/no-resultados")
+                return redirect("http://148.204.66.69/aluse/index.php/no-resultados")
 
     except Exception as e:
         logger.error(traceback.format_exc())
-        return redirect("http://localhost:8080/aluse/index.php/no-resultados")
+        return redirect("http://148.204.66.69/aluse/index.php/no-resultados")
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000, debug=True, use_reloader=False)
+    app.run(host='10.0.2.15', port=5000, debug=True, use_reloader=False)

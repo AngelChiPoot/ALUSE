@@ -122,13 +122,13 @@ def create_results_page(schema):
                             new_page.write('\t\t\t\t\t\t\t</div>\n')
 
                             new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Descargar">\n')
-                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://localhost/aluse/analize/files/data/' + data["tables"][i] + '" download>\n')
+                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://148.204.66.69/aluse/analize/files/data/' + data["tables"][i] + '" download>\n')
                             new_page.write('\t\t\t\t\t\t\t\t\tDescargar\n')
                             new_page.write('\t\t\t\t\t\t\t\t</a>\n')
                             new_page.write('\t\t\t\t\t\t\t</div>\n')
 
                             new_page.write('\t\t\t\t\t\t\t<div class="cell" data-title="Descargar">\n')
-                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://localhost/aluse/analize/files/data/' + data["fulltables"][i] + '" download>\n')
+                            new_page.write('\t\t\t\t\t\t\t\t<a href="http://148.204.66.69/aluse/analize/files/data/' + data["fulltables"][i] + '" download>\n')
                             new_page.write('\t\t\t\t\t\t\t\t\tDescargar\n')
                             new_page.write('\t\t\t\t\t\t\t\t</a>\n')
                             new_page.write('\t\t\t\t\t\t\t</div>\n')
