@@ -32,11 +32,10 @@ def analize():
     cores, ram = computer_specs()
     reduced_files, att_names = select_att(files, cores, ram)
     create_result_files(att_names, reduced_files, files)
-    #create_result_files(an, rf, f)
     create_results_page(SCHEMA)
-    delete_originals(TABLES.values(), DATA_ROUTE)
+    delete_originals(list(TABLES.values()), DATA_ROUTE)
     end = time.time()
-    logger.info("Time taken to run all the processes: ", (end - start)/60, " minutes.")
+    logger.info("Time taken to run all the processes: " + str((end - start)/60) + " minutes.")
 
     return
 
