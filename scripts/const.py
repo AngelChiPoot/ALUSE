@@ -11,7 +11,6 @@ N_AREAS     = 0
 TABLES    = {}
 #Size N_TABLES-1, it contains how the main table is related with the others
 RELATIONS   = {}
-LABELS      = 0
 
 logging_format = '%(asctime)s: %(levelname)s: %(message)s'
 logging.basicConfig(level=logging.DEBUG, format=logging_format)

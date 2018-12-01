@@ -17,7 +17,6 @@ def analize():
     N_TABLES = config['ntables']
     N_PV = config['nPV']
     N_AREAS = config['nareas']
-    LABELS = config['labels']
     relations = config['relations']
     tables = config['tables']
 
