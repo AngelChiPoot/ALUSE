@@ -12,7 +12,6 @@ def cfs(table, cores):
     loader = Loader("weka.core.converters.CSVLoader")
     anneal_data = loader.load_file(table)
     anneal_data.class_is_last()
-
     logger.info("Running attribute selection for: " + str(table.split("/")[-1]) + ". Please, wait a moment.")
     search = ASSearch(classname="weka.attributeSelection.BestFirst", options=["-D", "0", "-N", "5"])
     evaluation = ASEvaluation(classname="weka.attributeSelection.CfsSubsetEval", options=["-Z", "-P", cores, "-E", cores])

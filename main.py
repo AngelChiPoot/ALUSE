@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 def analize():
     ### Initialaze enviroment variables
-    with open(CONFIG_ROUTE + "init2.json") as config_file:
+    with open(CONFIG_ROUTE + "init.json") as config_file:
         config = json.load(config_file)
     SCHEMA = config['schema']
     N_TABLES = config['ntables']
@@ -33,6 +33,7 @@ def analize():
     reduced_files, att_names = select_att(files, cores, ram)
     create_result_files(att_names, reduced_files, files)
     create_results_page(SCHEMA)
+    logger.info("Test:Deleting Tables: " + str(list(TABLES.values())))
     delete_originals(list(TABLES.values()), DATA_ROUTE)
     end = time.time()
     logger.info("Time taken to run all the processes: " + str((end - start)/60) + " minutes.")
@@ -42,7 +43,7 @@ def analize():
 
 @app.route("/runProcess/", methods=["GET", "POST"])
 def run_process():
-    logger.info("Llegó una petición del tipo RUN_PROCESS a Python: ")
+    logger.info("A request RUN_PROCESS arrived")
     try:
         if request.method == 'POST':
             logger.info("Iniciando parsing de los datos de entrada.")
@@ -77,10 +78,9 @@ def run_process():
             with open(CONFIG_ROUTE + 'init.json', 'w') as outfile:
                 json.dump(data, outfile, indent=4)
 
-            logger.info("Iniciando analis de ALUSE.")
+            logger.info("ALUSE analysis started.")
             analize()
 
-        logger.info("Petición de ANALIZAR hacia la API Rest servida.")
         return redirect("http://148.204.66.69/aluse/index.php/proceso-completo")
     except Exception as e:
         logger.error(traceback.format_exc())
@@ -89,12 +89,12 @@ def run_process():
 
 @app.route('/consultResults/', methods=["GET", "POST"])
 def consult_results():
-    logger.info("Llegó una petición del tipo CONSULTAR a Python")
+    logger.info("A request RUN_PROCESS arrived")
     try:
         if request.method == 'POST':
             result = request.form
             file = result["name"] + ".html"
-            logger.info("Archivo: " + file)
+            logger.info("File: " + file)
             if os.path.exists('./results/' + file):
                 return redirect("http://148.204.66.69/aluse/analize/results/" + file)
             else:
