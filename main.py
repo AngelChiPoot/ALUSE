@@ -15,8 +15,8 @@ def analize():
         config = json.load(config_file)
     SCHEMA = config['schema']
     N_TABLES = config['ntables']
-    N_PV = config['nPV']
-    N_AREAS = config['nareas']
+    N_PV = int(config['nPV'])
+    N_AREAS = int(config['nareas'])
     relations = config['relations']
     tables = config['tables']
 
